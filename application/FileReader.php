@@ -6,7 +6,7 @@ class FileReader
 {
     private $fileLocation;
     private static $delimiters = [
-        " ", ",", ".", "\u0020", "\u000D", "\r", "\n", "\r\n"
+        " ", ",", ".", ";", ":", '\u0020', '\u000D', "\r", "\n", "\r\n"
     ];
 
     public function __construct(string $fileAddress)
@@ -23,12 +23,12 @@ class FileReader
         $word = '';
         while($data = fread($handler, 1)){
             if(in_array($data, self::$delimiters)){
-                // начинается новое слово
-                yield trim($word);
+                if(strlen(trim($word)) > 0 && !in_array(trim($word), self::$delimiters))
+                    yield trim($word);
+
                 $word = '';
             }
             else{
-                // накапливаем старое
                 $word .= $data;
             }
         }
