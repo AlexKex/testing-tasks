@@ -5,9 +5,6 @@ namespace application;
 class FileReader
 {
     private $fileLocation;
-    private static $delimiters = [
-        " ", ",", ".", ";", ":", '\u0020', '\u000D', "\r", "\n", "\r\n"
-    ];
 
     public function __construct(string $fileAddress)
     {
@@ -22,8 +19,8 @@ class FileReader
 
         $word = '';
         while($data = fread($handler, 1)){
-            if(in_array($data, self::$delimiters)){
-                if(strlen(trim($word)) > 0 && !in_array(trim($word), self::$delimiters))
+            if(preg_match("/\W/", $data)){
+                if(strlen(trim($word)) > 0 && !preg_match("/\W/", trim($word)))
                     yield trim($word);
 
                 $word = '';
@@ -33,7 +30,7 @@ class FileReader
             }
         }
 
-        if(strlen(trim($word)) > 0 && !in_array(trim($word), self::$delimiters))
+        if(strlen(trim($word)) > 0 && !preg_match("/\W/", trim($word)))
             yield trim($word);
 
         fclose($handler);
