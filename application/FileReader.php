@@ -6,7 +6,7 @@ class FileReader
 {
     private $fileLocation;
     private static $delimiters = [
-        " ", ",", ".", "\u0020", "\u000D"
+        " ", ",", ".", "\u0020", "\u000D", "\r", "\n", "\r\n"
     ];
 
     public function __construct(string $fileAddress)
